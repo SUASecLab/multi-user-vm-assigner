@@ -1,0 +1,12 @@
+services:
+  websockify:
+    build: .
+    ports:
+      - "8080:8080"
+    command: "assigner"
+    environment:
+      SECRET_WEBSITE_KEY: "$SECRET_WEBSITE_KEY"
+      SECRET_WEBSITE_ISS: "$SECRET_WEBSITE_ISS"
+      SECRET_JITSI_KEY: "$SECRET_JITSI_KEY"
+      JITSI_URL: "$JITSI_URL"
+      JITSI_ISS: "$JITSI_ISS"

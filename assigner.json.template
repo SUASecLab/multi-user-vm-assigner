@@ -1,0 +1,5 @@
+{
+    "machines": {
+        "vm-route: "https://path/to/noVNC/server"
+    }
+}
