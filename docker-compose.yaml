@@ -1,5 +1,5 @@
 services:
-  websockify:
+  assigner:
     build: .
     ports:
       - "8080:8080"
