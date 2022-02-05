@@ -29,13 +29,13 @@ type View struct {
 }
 
 func init() {
-	configurationFile = flag.String("f", "assigner.json", "Location of the configuration file")
+	configurationFile = flag.String("f", "assigner.json", "configuration file")
 }
 
 func handle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	jwt := r.URL.Query().Get("jwt")
+	jwt := r.URL.Query().Get("token")
 	authenticated, claims := decodeWebsiteToken(jwt)
 
 	if !authenticated {
@@ -62,17 +62,21 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	template, err := template.ParseFiles("view.html")
 	if err != nil {
 		log.Printf("Error while parsing template: %s\n", err)
+		return
 	}
 
 	err = template.Execute(w, data)
 	if err != nil {
 		log.Printf("Error while executing template: %s\n", err)
+		return
 	}
 }
 
 func main() {
-	config = readConfigurationFile(configurationFile)
+	flag.Parse()
+	log.SetFlags(0)
 
+	config = readConfigurationFile(configurationFile)
 	websiteKey = os.Getenv("SECRET_WEBSITE_KEY")
 	jitsiKey = os.Getenv("SECRET_JITSI_KEY")
 	jitsiUrl = os.Getenv("JITSI_URL")

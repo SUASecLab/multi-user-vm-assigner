@@ -9,14 +9,13 @@ import (
 )
 
 func decodeWebsiteToken(tokenString string) (bool, map[string]interface{}) {
-	secret := []byte(websiteKey)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("%s: failed to decode token: unexpected signing method: %v",
 				time.Now().Format(time.Stamp), token.Header["alg"])
 		}
 
-		return secret, nil
+		return []byte(websiteKey), nil
 	})
 
 	if err != nil {
@@ -64,6 +63,7 @@ func generateJitsiToken(claims map[string]interface{}) string {
 	tokenString, err := token.SignedString([]byte(jitsiKey))
 	if err != nil {
 		log.Printf("Could not generate Jitsi token: %s\n", err)
+		return ""
 	}
 
 	return tokenString
