@@ -15,7 +15,7 @@ func decodeWebsiteToken(tokenString string) (bool, map[string]interface{}) {
 				time.Now().Format(time.Stamp), token.Header["alg"])
 		}
 
-		return []byte(websiteKey), nil
+		return []byte(externalToken), nil
 	})
 
 	if err != nil {
@@ -43,7 +43,7 @@ func generateJitsiToken(claims map[string]interface{}) string {
 		moderator = false
 	}
 
-	currentTime := time.Now()
+	currentTime := time.Now().Unix()
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"context": map[string]map[string]string{
@@ -51,13 +51,13 @@ func generateJitsiToken(claims map[string]interface{}) string {
 				"name": name,
 			},
 		},
-		"nbf":       currentTime.Unix(),
+		"nbf":       currentTime - 5,
 		"aud":       "jitsi",
 		"iss":       jitsiIssuer,
 		"room":      "*",
 		"moderator": moderator,
-		"iat":       currentTime.Unix(),
-		"exp":       currentTime.Add(time.Duration(time.Hour * 3)).Unix(),
+		"iat":       currentTime,
+		"exp":       currentTime + 60,
 	})
 
 	tokenString, err := token.SignedString([]byte(jitsiKey))

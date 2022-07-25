@@ -16,7 +16,7 @@ var (
 	configurationFile *string
 	config            Configuration
 
-	websiteKey    string
+	externalToken string
 	jitsiKey      string
 	jitsiUrl      string
 	jitsiIssuer   string
@@ -39,6 +39,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	authenticated, claims := decodeWebsiteToken(jwt)
 
 	if !authenticated {
+		w.WriteHeader(http.StatusForbidden)
 		fmt.Fprintf(w, "Invalid authentication token")
 		return
 	}
@@ -49,6 +50,7 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	vmUrl, exists := config.Machines[vm]
 
 	if !exists || len(vmUrl) < 1 {
+		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "Invalid machine")
 		return
 	}
@@ -61,12 +63,14 @@ func handle(w http.ResponseWriter, r *http.Request) {
 	template := template.New("view.html")
 	template, err := template.ParseFiles("view.html")
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("Error while parsing template: %s\n", err)
 		return
 	}
 
 	err = template.Execute(w, data)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		log.Printf("Error while executing template: %s\n", err)
 		return
 	}
@@ -75,13 +79,34 @@ func handle(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.Parse()
 	log.SetFlags(0)
+	var exists bool
 
 	config = readConfigurationFile(configurationFile)
-	websiteKey = os.Getenv("SECRET_WEBSITE_KEY")
-	jitsiKey = os.Getenv("SECRET_JITSI_KEY")
-	jitsiUrl = os.Getenv("JITSI_URL")
-	jitsiIssuer = os.Getenv("JITSI_ISS")
-	noVncPassword = os.Getenv("NOVNC_PASSWORD")
+
+	externalToken, exists = os.LookupEnv("EXTERNAL_TOKEN")
+	if !exists {
+		log.Fatalln("No external token set")
+	}
+
+	jitsiKey, exists = os.LookupEnv("SECRET_JITSI_KEY")
+	if !exists {
+		log.Fatalln("No Jitsi key set")
+	}
+
+	jitsiUrl, exists = os.LookupEnv("JITSI_URL")
+	if !exists {
+		log.Fatalln("No Jitsi URL set")
+	}
+
+	jitsiIssuer, exists = os.LookupEnv("JITSI_ISS")
+	if !exists {
+		log.Fatalln("No Jitsi issuer set")
+	}
+
+	noVncPassword, exists = os.LookupEnv("NOVNC_PASSWORD")
+	if !exists {
+		log.Fatalln("No NoVNC password set")
+	}
 
 	r = mux.NewRouter()
 	r.HandleFunc("/{vm}", handle)
