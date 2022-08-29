@@ -4,7 +4,7 @@ RUN addgroup -S assigner && adduser -S assigner -G assigner
 USER assigner
 
 WORKDIR /src/app
-COPY . .
+COPY --chown=assigner:assigner . .
 
 RUN go get
 RUN go install
