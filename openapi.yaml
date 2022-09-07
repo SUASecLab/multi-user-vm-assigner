@@ -1,0 +1,54 @@
+consumes:
+    - text/plain
+info:
+    contact:
+        email: t.tefke@stud.fh-sm.de
+        name: Tobias Tefke
+    description: This is the API documentation for the multi-user-vm-assigner. It is used in the SUASecLab to assign multiple people to one virtual machine. All people connected to a virtual machine are also connected to a Jitsi Meet room in which the users can talk.
+    license:
+        name: GPL-3.0
+        url: https://www.gnu.org/licenses/gpl-3.0.en.html
+    title: multi-user-vm-assigner
+    version: 0.0.1
+paths:
+    /{vm}:
+        get:
+            description: Request access to the virtual machine having the handed over name.
+            operationId: getVm
+            parameters:
+                - description: The name of the virtual machine which should be accessed.
+                  in: path
+                  name: vm
+                  required: true
+                  type: string
+                - description: The JWT token of the user handed out by the Sidecar, used for authentication.
+                  format: JWT
+                  in: query
+                  name: token
+                  required: true
+                  type: string
+                - description: The name of the user to be displayed in the Jitsi Meet room.
+                  in: query
+                  name: name
+                  required: true
+                  type: string
+            produces:
+                - text/html
+            responses:
+                "200":
+                    description: The provided data is correct, access to the virtual machine can be granted. The user directly receives the HTML code for a website embedding the virtual machine and a Jitsi Meet conference, in which all people connected to the same virtual machine meet.
+                    schema:
+                        description: Website in which the virtual machine and a Jitsi Meet conference with all users connected to the specific virtual machine are embedded.
+                        type: file
+                "400":
+                    description: The request could not be processed because there is no virtual machine having the handed over name.
+                "403":
+                    description: The request could not be processed because the user's access token is not valid.
+                "500":
+                    description: The request could not be processed due to an internal error. Maybe the Sidecar experienced an error.
+            summary: Access a virtual machine.
+produces:
+    - text/html
+schemes:
+    - http
+swagger: "2.0"

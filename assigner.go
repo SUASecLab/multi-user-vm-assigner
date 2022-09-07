@@ -1,3 +1,21 @@
+// multi-user-vm-assigner
+//
+// This is the API documentation for the multi-user-vm-assigner. It is used in the SUASecLab to assign multiple people to one virtual machine. All people connected to a virtual machine are also connected to a Jitsi Meet room in which the users can talk.
+//
+// Version: 0.0.1
+//
+// License: GPL-3.0 https://www.gnu.org/licenses/gpl-3.0.en.html
+//
+// Contact: Tobias Tefke <t.tefke@stud.fh-sm.de>
+//
+// Schemes: http
+//
+// Consumes:
+// - text/plain
+// Produces:
+// - text/html
+//
+// swagger:meta
 package main
 
 import (
