@@ -26,6 +26,11 @@ func virtualMachine(w http.ResponseWriter, r *http.Request) {
 	//   description: The name of the virtual machine which should be accessed.
 	//   required: true
 	//   type: string
+	// - name: vm2
+	//   in: query
+	//   description: The name of a second virtual machine which should be accessed.
+	//   required: false
+	//   type: string
 	// - name: token
 	//   in: query
 	//   description: The JWT token of the user handed out by the Sidecar, used for authentication.
@@ -53,6 +58,7 @@ func virtualMachine(w http.ResponseWriter, r *http.Request) {
 
 	token := r.URL.Query().Get("token")
 	name := url.QueryEscape(r.URL.Query().Get("name"))
+	vm2 := r.URL.Query().Get("vm2")
 
 	// Validate token
 	validationResult, err := extensions.GetValidationResult("http://" + sidecarUrl +
@@ -83,6 +89,19 @@ func virtualMachine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check if second vm exists (if handed over)
+	var vm2Url string
+	if len(vm2) > 0 {
+		vm2Url, exists = config.Machines[vm2]
+		if !exists || len(vm2Url) < 1 {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "Invalid second machine")
+			return
+		} else {
+			vm2Url = vm2Url + "&password=" + noVncPassword
+		}
+	}
+
 	// Generate Jitsi token
 	jitsiIssuance, err := extensions.IssueToken("http://" + sidecarUrl +
 		"/issuance?token=" + token + "&name=" + name)
@@ -94,8 +113,9 @@ func virtualMachine(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	data := View{
-		WorkplaceUrl: vmUrl + "&password=" + noVncPassword,
-		JitsiUrl:     "https://" + jitsiUrl + "/" + vm + "?jwt=" + jitsiIssuance.Token,
+		WorkplaceUrl:  vmUrl + "&password=" + noVncPassword,
+		Workplace2Url: vm2Url,
+		JitsiUrl:      "https://" + jitsiUrl + "/" + vm + "?jwt=" + jitsiIssuance.Token,
 	}
 
 	template := template.New("view.html")

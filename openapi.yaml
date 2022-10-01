@@ -21,6 +21,10 @@ paths:
                   name: vm
                   required: true
                   type: string
+                - description: The name of a second virtual machine which should be accessed.
+                  in: query
+                  name: vm2
+                  type: string
                 - description: The JWT token of the user handed out by the Sidecar, used for authentication.
                   format: JWT
                   in: query

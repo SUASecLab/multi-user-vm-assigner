@@ -38,8 +38,9 @@ var (
 )
 
 type View struct {
-	WorkplaceUrl string
-	JitsiUrl     string
+	WorkplaceUrl  string
+	Workplace2Url string
+	JitsiUrl      string
 }
 
 func init() {

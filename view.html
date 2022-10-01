@@ -17,6 +17,11 @@
     </style>
 </head>
 <body>
-    <iframe src="{{.WorkplaceUrl}}" frameborder="0" width="90%" height="100%" allowfullscreen></iframe>
+    {{if .Workplace2Url}}
+        <iframe src="{{.WorkplaceUrl}}" frameborder="0" width="45%" height="100%" allowfullscreen></iframe>
+        <iframe src="{{.Workplace2Url}}" frameborder="0" width="45%" height="100%" allowfullscreen></iframe>
+    {{else}}
+        <iframe src="{{.WorkplaceUrl}}" frameborder="0" width="90%" height="100%" allowfullscreen></iframe>
+    {{end}}
     <iframe src="{{.JitsiUrl}}" frameborder="0" width="10%" height="100%" allow="camera *; microphone *;" allowfullscreen></iframe>
 </body>
