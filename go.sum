@@ -1,4 +1,4 @@
 github.com/SUASecLab/workadventure_admin_extensions v0.0.2-0.20220829143533-f427a7a6ab4e h1:iyxruqc3/zbUbxYJ4jqUz0BXwxZsFeYWXqjPWn9AhjE=
 github.com/SUASecLab/workadventure_admin_extensions v0.0.2-0.20220829143533-f427a7a6ab4e/go.mod h1:lkvve/M/GaWz0e2NjGVQlgMBS/7TXqp3ikBWt45XIjM=
-github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
-github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
+github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
+github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
