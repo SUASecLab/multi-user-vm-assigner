@@ -11,6 +11,7 @@ RUN go build
 FROM scratch
 COPY --from=golang-builder /src/app/assigner /assigner
 COPY --from=golang-builder /etc/passwd /etc/passwd
+COPY --chown=assigner:assigner view.html /view.html
 
 USER assigner
 CMD [ "/assigner" ]
