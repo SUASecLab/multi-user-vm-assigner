@@ -102,20 +102,12 @@ func virtualMachine(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	// Generate Jitsi token
-	jitsiIssuance, err := extensions.IssueToken("http://" + sidecarUrl +
-		"/issuance?token=" + token + "&name=" + name)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, jitsiIssuance.Error)
-		log.Println(jitsiIssuance.Error)
-		return
-	}
+	// Open Jitsi room
 	data := View{
 		WorkplaceUrl:  vmUrl + "&password=" + noVncPassword,
 		Workplace2Url: vm2Url,
-		JitsiUrl:      "https://" + jitsiUrl + "/" + vm + "?jwt=" + jitsiIssuance.Token,
+		JitsiUrl: "https://" + domain + extensionsSubdir +
+			"/jitsi/?roomName=" + vm + "&userName=" + name + "&token=" + token,
 	}
 
 	template := template.New("view.html")

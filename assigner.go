@@ -32,9 +32,10 @@ var (
 	configurationFile *string
 	config            Configuration
 
-	sidecarUrl    string
-	jitsiUrl      string
-	noVncPassword string
+	domain           string
+	extensionsSubdir string
+	sidecarUrl       string
+	noVncPassword    string
 )
 
 type View struct {
@@ -59,9 +60,14 @@ func main() {
 		log.Fatalln("No sidecar URL set")
 	}
 
-	jitsiUrl, exists = os.LookupEnv("JITSI_URL")
+	domain, exists = os.LookupEnv("DOMAIN")
 	if !exists {
-		log.Fatalln("No Jitsi URL set")
+		log.Fatalln("No domain set")
+	}
+
+	extensionsSubdir, exists = os.LookupEnv("EXTENSIONS_SUBDIR")
+	if !exists {
+		log.Fatalln("No extensions subdir set")
 	}
 
 	noVncPassword, exists = os.LookupEnv("NOVNC_PASSWORD")
